@@ -1,38 +1,424 @@
-.App {
-  text-align: center;
+/* Updated osu!radio CSS with dark red/burgundy theme and Flowbite icon compatibility */
+
+/* Basic reset and fonts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body, html {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  background-color: #121212;
+  color: #fff;
+  height: 100%;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* App Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #121212;
+  color: #fff;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Header styling */
+.header {
+  background-color: rgba(25, 25, 25, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid #333;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Main content area */
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 280px;
+  background-color: #1a1a1a;
+  border-right: 1px solid #333;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-content {
+  padding: 1rem;
+  flex: 1;
+}
+
+.folder-header {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Button styling - Changed accent color to #FF5555 (vibrant red) */
+.btn {
+  background-color: #FF5555;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn:hover {
+  background-color: #FF3333;
+  transform: scale(1.02);
+}
+
+/* Input and Select fields */
+.input-field {
+  width: 100%;
+  padding: 0.7rem;
+  margin: 1rem 0;
+  border: none;
+  border-radius: 8px;
+  background-color: #333;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.input-field::placeholder {
+  color: #999;
+}
+
+.input-field:focus {
+  outline: none;
+  background-color: #3a3a3a;
+}
+
+.select-field {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #333;
+  color: #fff;
+  font-size: 0.9rem;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 30px;
+}
+
+.select-field:focus {
+  outline: none;
+  background-color: #3a3a3a;
+}
+
+/* Song list styling */
+.song-list {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.song-item {
+  padding: 0.75rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-item:hover {
+  background-color: #333;
+}
+
+.song-item.active {
+  background-color: #333;
+  color: #FF5555; /* Changed to match new accent color */
+}
+
+/* Player container */
+.player-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: #411719; /* Darker burgundy/red background */
+  position: relative;
+  overflow: hidden;
+}
+
+.player-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px);
+  opacity: 0.2; /* Lower opacity to make the dark background more visible */
+  transform: scale(1.1);
+}
+
+/* Player card */
+.player-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.player-card h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+.album-cover {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 0 auto 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.song-artist {
+  color: #999;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.song-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+/* Progress bar */
+.progress-container {
+  margin: 2rem 0;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #FF5555; /* Changed to match new accent color */
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(255, 85, 85, 0.2);
+  transition: all 0.2s ease;
+}
+
+.progress-bar::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Controls - Updated to align all controls horizontally */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* All controls container - New */
+.all-controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #FF5555; /* Changed to match new accent color */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  background-color: rgba(255, 85, 85, 0.1);
+}
+
+.control-btn.primary {
+  background-color: #FF5555; /* Changed to match new accent color */
+  color: #fff;
+  width: 50px;
+  height: 50px;
+}
+
+.control-btn.primary:hover {
+  transform: scale(1.05);
+  background-color: #FF3333;
+}
+
+/* Icon styling - Updated for Flowbite */
+.control-icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.control-btn.primary .control-icon {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* Volume control */
+.volume-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.volume-icon {
+  color: #999;
+  display: flex;
+  align-items: center;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #FF5555; /* Changed to match new accent color */
+  cursor: pointer;
+}
+
+/* Shuffle checkbox */
+.shuffle-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.shuffle-checkbox.active {
+  background-color: rgba(255, 85, 85, 0.2); /* Changed to match new accent color */
+}
+
+.checkbox-square {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background-color: transparent;
+  border: 2px solid #FF5555; /* Changed to match new accent color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.checkbox-square.checked {
+  background-color: #FF5555; /* Changed to match new accent color */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Empty state */
+.empty-state {
+  color: #999;
+  text-align: center;
 }
+
+.empty-state p {
+  margin: 1rem 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* Truncate long text */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
