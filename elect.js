@@ -1,19 +1,27 @@
 // elect.js
 console.log('[main] elect.js loaded');
-
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const { parseOsuMetadata } = require('./osuParser');
+
 
 
 const fileServer = express();
-const EXPRESS_PORT = 3002;
+const EXPRESS_PORT = 3001;
 let songsRoot = null;
 
 
 fileServer.use(cors());
+
+const buildPath = path.join(__dirname, 'build');
+fileServer.use(express.static(buildPath));
+fileServer.get('/', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
+
 
 fileServer.listen(EXPRESS_PORT, () => {
   console.log(`[main] Songs server listening on http://localhost:${EXPRESS_PORT}/songs`);
@@ -29,11 +37,15 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: true,  
+      nodeIntegration: false,  
     },
   });
 
-  mainWindow.loadURL('http://localhost:3001');
+  const isDev = !app.isPackaged;
+  const frontendURL = isDev
+  ? 'http://localhost:3001'
+  : `http://localhost:${EXPRESS_PORT}`;
+  mainWindow.loadURL(frontendURL);
   mainWindow.webContents.openDevTools();
   mainWindow.on('closed', () => (mainWindow = null));
 }
@@ -103,15 +115,20 @@ ipcMain.handle('get-beatmap-info', async (event, songsFolder, name) => {
     }
 
 
-    let beatmapName = name.replace(/^\d+\s+/, '');           
-    beatmapName = beatmapName.replace(/[^\w\s-]/g, '');      
-    beatmapName = beatmapName.replace(/\s+/g, ' ').trim();   
-    beatmapName = beatmapName.replace(/\s*-\s*$/, '');       
-    if (!beatmapName.includes(' - ')) {
-      const [artist, title] = beatmapName.split(' ').slice(0, 2);
-      beatmapName = `${artist} - ${title}`;
-    }
-    const [artist, title] = beatmapName.split(' - ');
+    // Find the first .osu file
+  const osuFile = files.find(f => f.endsWith('.osu'));
+  let artist = 'Unknown';
+  let title = 'Unknown';
+
+  if (osuFile) {
+    const osuPath = path.join(beatmapFolderPath, osuFile);
+    const osuContent = fs.readFileSync(osuPath, 'utf-8');
+    const metadata = await parseOsuMetadata(osuContent);
+
+    artist = metadata.Artist || 'Unknown';
+    title  = metadata.Title  || 'Unknown';
+  }
+
 
     const beatmapInfo = {
       artist: artist.trim(),
